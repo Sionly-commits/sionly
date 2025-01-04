@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Patlatma Oyunu</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #add8e6;
+      background-image: url('https://example.com/background.jpg'); /* Arka plan resmi URL'sini buraya ekleyin */
+      background-size: cover;
+      overflow: hidden;
+    }
+    #game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .emoji {
+      font-size: 50px;
+      cursor: pointer;
+      position: absolute;
+      user-select: none;
+    }
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      color: white;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="score">Skor: 0</div>
+    <span class="emoji">😀</span>
+  </div>
+  <script>
+    const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇'];
+    const emoji = document.querySelector('.emoji');
+    const scoreDisplay = document.getElementById('score');
+    let score = 0;
+    let speed = 2000; // Başlangıç hızı
+
+    function getRandomPosition() {
+      const x = Math.floor(Math.random() * (window.innerWidth - 50));
+      const y = Math.floor(Math.random() * (window.innerHeight - 50));
+      return { x, y };
+    }
+
+    function moveEmoji() {
+      const { x, y } = getRandomPosition();
+      emoji.style.left = `${x}px`;
+      emoji.style.top = `${y}px`;
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    }
+
+    function increaseDifficulty() {
+      speed = Math.max(500, speed - 100); // Hızı arttır
+      clearInterval(interval);
+      interval = setInterval(moveEmoji, speed);
+    }
+
+    emoji.addEventListener('click', () => {
+      score++;
+      scoreDisplay.textContent = `Skor: ${score}`;
+      moveEmoji();
+      if (score % 5 === 0) {
+        increaseDifficulty(); // Her 5 puanda zorluk arttır
+      }
+      if (score >= 50) {
+        alert('Tebrikler! 50 emoji patlattınız!');
+        score = 0; // Skor sıfırlanır
+        speed = 2000; // Hız sıfırlanır
+        clearInterval(interval);
+        interval = setInterval(moveEmoji, speed);
+      }
+    });
+
+    let interval = setInterval(moveEmoji, speed);
+  </script>
+</body>
+</html>
